@@ -1,26 +1,49 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
 import './App.css';
+import BookCards from './BookCards'
+import SearchBar from './SearchBar'
+import SideNavCart from './SideNavCart'
 
 class App extends Component {
+
+  state = {
+    books: [],
+    activeBooks: [],
+    cart: []
+  }
+
+  async componentDidMount() {
+    const response = await fetch('http://localhost:8082/api/books')
+    const books = await response.json()
+    this.setState(prevState => {
+      return { books, activeBooks: books }
+    })
+  }
+
+  filterBooks = (term) => {
+    let filteredBooks = this.state.books.filter(book => book.title.toLowerCase().includes(term.toLowerCase()) || book.author.toLowerCase().includes(term.toLowerCase()))
+    this.setState(prevState => {
+      return { activeBooks: filteredBooks }
+    })
+  }
+
+  addToCart = (bookId) => {
+    this.setState(prevState => {
+      return { cart: [...prevState.cart, prevState.books[bookId-1]] }
+    })
+  }
+
+
+
   render() {
     return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
-      </div>
+      <main>
+        <SearchBar filterBooks={this.filterBooks}/>
+        <SideNavCart cart={this.state.cart}/>
+        <div className='row'>
+        <BookCards addToCart={this.addToCart} books={this.state.activeBooks} />
+        </div>
+      </main>
     );
   }
 }
