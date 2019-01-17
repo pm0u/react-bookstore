@@ -22,7 +22,7 @@ class SideNavCart extends Component {
       return total
     }, 0)
     return (
-      <li>Total: <span className='right'>{`$${total}`}</span></li>
+      <li style={{padding:'5px'}}>Total: <span className='right'>{`$${total}`}</span></li>
     )
 
   }

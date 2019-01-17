@@ -10,7 +10,6 @@ class SearchBar extends Component {
 
   onClose = () => {
     let searchBox = document.getElementById('search')
-    console.log(searchBox)
     searchBox.value=''
   }
 
